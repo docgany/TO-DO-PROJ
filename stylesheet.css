@@ -1,0 +1,129 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+    align-items: center;
+    text-align: center;
+    background: #2f363e;
+}
+
+.container {
+    width: 450px;
+    position: relative;
+    height: 550px;
+    border-radius: 30px;
+    padding: 30px 50px;
+    background: #2f363e;
+    box-shadow: 25px 25px 75px rgba(0, 0, 0, 0.25),
+    10px 10px 70px rgba(0, 0, 0, 0.25),
+    inset 5px 5px 10px rgba(0, 0, 0, 0.5),
+    inset 5px 5px 20px rgba(255, 255, 255, 0.2),
+    inset -5px -5px 15px rgba(0, 0, 0, 0.75);
+}
+
+h1 {
+    width: 100%;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.75em;
+    margin-bottom: 5px;
+}
+p {
+    color: white;
+    font-style: italic;
+    letter-spacing: 1px;
+}
+.progress-circle {
+    margin-top: 10px;
+}
+
+#progress-text {
+    font-size: 30px;
+    color: #a2d9f7;
+}
+
+.bar {
+    background: #333;
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 10px auto;
+    width: 80%;
+    border: 2px solid white;
+}
+
+#bar-fill {
+    height: 15px;
+    background: #1de9b6;
+    width: 10%;
+    transition: width 0.3s ease;
+}
+
+#input-box {
+    width: 80%;
+    margin-top: 8px;
+    padding: 14px 15px;
+    font-size: 1em;
+    border-radius: 30px;
+    background: linear-gradient(to bottom, #D5DEE7 0%, #E8EBF2 50%, #E2E7ED 100%), linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 50%, rgba(255, 255, 255, 0.02) 61%, rgba(0, 0, 0, 0.02) 73%), linear-gradient(33deg, rgba(255, 255, 255, 0.20) 0%, rgba(0, 0, 0, 0.20) 100%);
+        background-blend-mode: normal, color-burn;
+    font-style: italic;
+    color: white;
+    border: none;
+    outline: none;
+    box-shadow: 5px 5px 7px rgba(0, 0, 0, 0.25),
+    inset 2px 2px 5px rgba(0, 0, 0, 0.5),
+    inset -3px -3px 5px rgba(0, 0, 0, 0.5);
+}
+
+button {
+    padding: 10px 18px;
+    background-color: #1de9b6;
+    color: white;
+    border: none;
+    border-radius: 15px;
+    font-size: 20px;
+    margin-left: 5px;
+    text-align: center;
+    cursor: pointer;
+}
+
+h2 {
+    color: #fff;
+    margin: 10px 0;
+    text-decoration: underline;
+}
+
+ul {
+    list-style: none;
+    padding-right: 10px;
+    margin-top: 20px;
+    overflow-y: auto;
+    text-align: left;
+}
+
+.completed {
+    text-decoration: line-through;
+    border: 1px solid gray;
+    color: gray;
+}
+li {
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+}
+.edit-btn .delete-btn {
+    float: right;
+    cursor: pointer;
+    padding: 3px 5px;
+    color: crimson;
+    margin: 3px 5px;
+    background: none;
+    border: none;
+}
