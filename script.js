@@ -1,37 +1,9 @@
 const progressText = document.getElementById("progress-text");
 const barFill = document.getElementById("bar-fill");
 
-window.addEventListener("DOMContentLoaded", loadTasks);
-
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
-localStorage.setItem("tasks", JSON.stringify(tasks));
-
-function addTask() {
-    const inputBox = document.getElementById("input-box");
-    if (!inputBox.value) {
-        alert("Enter a task");
-        return;
-    }
-
-    const input = inputBox.value.trim();
-    tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-
-    const newTask = {
-        id: Math.floor(Math.random() * 10000),
-        input: input,
-        completed: false
-    };
-
-    tasks.push(newTask);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
-    loadTasks();
-    inputBox.value = "";
-}
-
-
 function loadTasks() {
-    tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     const listItems = document.getElementById("list-items");
     listItems.innerHTML = "";
 
@@ -78,7 +50,26 @@ function loadTasks() {
     updateProgress();
 }
 
-loadTasks();
+function addTask() {
+    const inputBox = document.getElementById("input-box");
+    if (!inputBox.value) {
+        alert("Enter a task");
+        return;
+    }
+
+    const input = inputBox.value.trim();
+
+    const newTask = {
+        id: Math.floor(Math.random() * 10000),
+        input: input,
+        completed: false
+    };
+
+    tasks.push(newTask);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+    loadTasks();
+    inputBox.value = "";
+}
 
 function updateProgress() {
     let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
@@ -87,4 +78,5 @@ function updateProgress() {
     progressText.textContent = `${completed}/${total}`;
     barFill.style.width = total ? `${(completed / total) * 100}%` : "0%";
 }
-updateProgress();
+
+window.addEventListener("DOMContentLoaded", loadTasks);
