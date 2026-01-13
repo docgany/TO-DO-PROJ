@@ -126,7 +126,7 @@ label span {
 
 /* width */
 ::-webkit-scrollbar {
-    width: 5px;
+    width: 7px;
 }
 
 /* Track */
@@ -137,7 +137,7 @@ label span {
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-    background: grey;
+    background: #8cd0be;
     border-radius: 10px;
 }
 
@@ -146,6 +146,7 @@ label span {
     border: 1px solid gray;
     color: gray;
 }
+
 li {
     border: 1px solid white;
     border-radius: 7px;
@@ -154,4 +155,5 @@ li {
     color: white;
     cursor: pointer;  
 }
+
 
