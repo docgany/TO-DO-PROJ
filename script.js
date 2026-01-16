@@ -1,7 +1,19 @@
+/*Add a new function to your ToDos app that initially loads ToDos data from an API.*/
+
+
+
 const progressText = document.getElementById("progress-text");
 const barFill = document.getElementById("bar-fill");
-
 let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+
+function updateProgress() {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    const total = tasks.length;
+    const completed = tasks.filter(task => task.completed).length;
+    progressText.textContent = `${completed}/${total}`;
+    barFill.style.width = total ? `${(completed / total) * 100}%` : "0%";
+}
 
 function loadTasks() {
     const listItems = document.getElementById("list-items");
@@ -69,14 +81,6 @@ function addTask() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
     loadTasks();
     inputBox.value = "";
-}
-
-function updateProgress() {
-    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
-    const total = tasks.length;
-    const completed = tasks.filter(task => task.completed).length;
-    progressText.textContent = `${completed}/${total}`;
-    barFill.style.width = total ? `${(completed / total) * 100}%` : "0%";
 }
 
 window.addEventListener("DOMContentLoaded", loadTasks);
