@@ -1,4 +1,10 @@
-/*Add a new function to your ToDos app that initially loads ToDos data from an API.*/
+/*Add a new function to your ToDos app that initially loads ToDos data from an API.
+    Workflow for upgraded To-Do APP
+    - Loads tasks from localStorage
+    - If empty, fetches 5 todos from JSONPlaceholder using Axios.
+    - Saves them to localStorage.
+    - Renders them.
+    - Let's users add new tasks.*/
 
 
 
@@ -24,11 +30,14 @@ function loadTasks() {
         li.innerHTML = `
          <label><input type="checkbox" ${task.completed ? "checked" : ""}>
          <span>${task.input}</span></label>
-         <span class="edit-btn btn">✏️</span>
-         <span class="delete-btn btn">🗑️</span>
+         <span class="btn-grp">
+         <button class="edit-btn">✏️</button>
+         <button class="delete-btn">🗑️</button>
+         </span>
         `;
 
         const checkbox = li.querySelector("input");
+        const btnGroup = li.querySelector(".btn-grp")
         const editBtn = li.querySelector(".edit-btn");
         const deleteBtn = li.querySelector(".delete-btn");
         const taskSpan = li.querySelector("label span");
@@ -39,7 +48,6 @@ function loadTasks() {
             li.classList.toggle("completed", task.completed);
             updateProgress();
         };
-
 
         deleteBtn.onclick = () => {
             const index = tasks.findIndex(t => t.id === task.id);
@@ -52,7 +60,6 @@ function loadTasks() {
             const editInput = prompt("Edit task:", task.input);
             if (editInput !== null) {
                 task.input = editInput.trim();
-                task.completed = false;
                 localStorage.setItem("tasks", JSON.stringify(tasks));
                 loadTasks();
             }

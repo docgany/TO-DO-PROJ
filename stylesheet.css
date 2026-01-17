@@ -83,7 +83,7 @@ p {
     color: #333;
 }
 
-button {
+#submit-btn {
     padding: 10px 18px;
     background-color: #1de9b6;
     color: white;
@@ -103,26 +103,41 @@ h2 {
 
 ul {
     list-style: none;
-    padding: 0;
+    padding: 5px;
     margin-top: 20px;
     overflow-y: auto;
     text-align: left;
     height: 190px;
 }
 
-.btn {
-    float: right;
-    padding-left: 5px;
-    margin-left: 5px;
-    background: none;
-    border: none;
+li {
+    display: flex;
+    border: 1px solid white;
+    border-radius: 7px;
+    padding: 10px;
+    margin: 10px 0;
+    color: white;
 }
 
 label span {
+    flex-grow: 1;
     text-align: left;
     margin-right: 3px;
     padding-left: 5px;
 }
+
+.delete-btn, .edit-btn {
+    margin-left: 4px;
+    background: none;
+    border: none;
+    cursor: pointer;  
+}
+.btn-grp {
+    margin-left: auto;
+
+
+}
+
 
 /* width */
 ::-webkit-scrollbar {
@@ -146,14 +161,4 @@ label span {
     border: 1px solid gray;
     color: gray;
 }
-
-li {
-    border: 1px solid white;
-    border-radius: 7px;
-    padding: 10px;
-    margin: 10px 0;
-    color: white;
-    cursor: pointer;  
-}
-
 
