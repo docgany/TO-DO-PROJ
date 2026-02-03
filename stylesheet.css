@@ -112,30 +112,31 @@ ul {
 
 li {
     display: flex;
+    align-items: center;
     border: 1px solid white;
-    border-radius: 7px;
+    border-radius: 9px;
     padding: 10px;
     margin: 10px 0;
     color: white;
 }
 
 label span {
-    flex-grow: 1;
+    flex: 1;
     text-align: left;
     margin-right: 3px;
     padding-left: 5px;
 }
 
 .delete-btn, .edit-btn {
-    margin-left: 4px;
+    margin-left: 6px;
     background: none;
     border: none;
     cursor: pointer;  
 }
 .btn-grp {
     margin-left: auto;
-
-
+    display: flex;
+    align-items: center;
 }
 
 
@@ -156,7 +157,7 @@ label span {
     border-radius: 10px;
 }
 
-.completed {
+.completed  {
     text-decoration: line-through;
     border: 1px solid gray;
     color: gray;
