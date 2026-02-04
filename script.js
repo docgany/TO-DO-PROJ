@@ -7,7 +7,7 @@
     - Let's users add new tasks.*/
 
 
-
+//Global variables
 const progressText = document.getElementById("progress-text");
 const barFill = document.getElementById("bar-fill");
 let tasks = [];
@@ -20,37 +20,10 @@ function updateProgress() {
     barFill.style.width = total ? `${(completed / total) * 100}%` : "0%";
 }
 
-async function loadTasks() {
-    let stored = JSON.parse(localStorage.getItem("tasks")) || [];
-    //If nothing in storage, fetch from API
-    if (stored.length === 0) {
-        try {
-            const response = await axios.get("https://jsonplaceholder.typicode.com/todos");
-            const firstFive = response.data.slice(0, 5).map(todo => ({
-                id: todo.id,
-                input: todo.title,
-                completed: todo.completed
-            }));
-            localStorage.setItem("tasks", JSON.stringify(firstFive));
-            stored = firstFive; //update stored after saving.
-            console.log("Fetched from API:", firstFive);
-        } catch (error) {
-            console.error("Something went wrong:", error);
-        }  
-    } else {
-        console.log("Loaded from localStorage:", stored);
-    }
-    //Always update global tasks
-    tasks = stored;
-
-    //Now render
-    renderTasks();
-}
-
-
+//Function to display todos on UI
 function renderTasks() {
     const listItems = document.getElementById("list-items");
-    listItems.innerHTML = "";
+    listItems.innerHTML = "";//clear old content
 
     tasks.forEach(task => {
         const li = document.createElement("li");
@@ -73,7 +46,7 @@ function renderTasks() {
         if (task.completed) {
             taskSpan.classList.add("completed");
         }
-       
+
 
         checkbox.onchange = () => {
             task.completed = checkbox.checked;
@@ -104,12 +77,54 @@ function renderTasks() {
     updateProgress();
 }
 
+
+//function to fetch todos from API and save to localStorage
+
+async function fetchAndStoreTodos() {
+    try {
+        //make GET response with Axios
+        await axios.get("https://jsonplaceholder.typicode.com/todos");
+        //Store only 5 todos and map to needed fields.
+        const cleanedTodos = response.data.slice(0, 5).map(todo => ({
+            id: todo.id,
+            input: todo.title,
+            completed: todo.completed
+        }));
+        //Save to localStorage as a string
+        localStorage.setItem("tasks", JSON.stringify(cleanedTodos));
+        //update our in-memory array
+        tasks = cleanedTodos;
+        //Display on the ui page
+        renderTasks();
+    } catch (error) {
+        alert("Error fetching todos:", error);
+        return [];
+    }
+}
+
+
+//Function to load todos from localStorage if they exist
+function loadTodosFromStorage() {
+    const stored = JSON.parse(localStorage.getItem("tasks"));
+    if (stored && Array.isArray(stored) && stored.length > 0) {
+        tasks = stored;
+        renderTasks();
+    } else {
+        //If nothing in storage, fetch from API
+        fetchAndStoreTodos();
+    }
+}
+
+
+//Function for adding tasks to array through user inputs.
 function addTask() {
     const inputBox = document.getElementById("input-box");
     if (!inputBox.value) {
         alert("Enter a task");
         return;
     }
+
+    tasks = loadTodosFromStorage();
 
     const newTask = {
         id: Math.floor(Math.random() * 10000),
@@ -131,4 +146,5 @@ inputBox.addEventListener("keydown", (e) => {
     }
 });
 
-window.addEventListener("DOMContentLoaded", loadTasks);
+//Run when the page load
+window.addEventListener("DOMContentLoaded", loadTodosFromStorage);
