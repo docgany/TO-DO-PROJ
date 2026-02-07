@@ -1,40 +1,54 @@
 /*Add a new function to your ToDos app that initially loads ToDos data from an API.
-    Workflow for upgraded To-Do APP
-    - Loads tasks from localStorage on page load
-    - If empty/missing, fetches 5 todos from JSONPlaceholder using Axios.
-    - Saves them to localStorage.
-    - Renders them in UI
-    - Let's users add new tasks.*/
+✅ Step - by - step logic
+* On page load:
+•	Read todos from localStorage.
+•	If it’s empty or missing:
+o	Fetch 5 todos from JSONPlaceholder using Axios.
+    o	Store them in localStorage.
+•	Render whatever is in localStorage.
 
+Two possible sources of data, which are:
+1. localStorage → your saved tasks
+2. Axios GET request → tasks from the API ()
+
+✔ Clear separation of responsibilities
+Each function does one thing: 
+•	Load
+•	Save
+•	Fetch
+•	Render
+•	Add
+*/
 
 //Global variables
 const progressText = document.getElementById("progress-text");
 const barFill = document.getElementById("bar-fill");
-let tasks = [];
+const listItems = document.getElementById("list-items");
 
 
-function updateProgress() {
-    const total = tasks.length;
-    const completed = tasks.filter(task => task.completed).length;
-    progressText.textContent = `${completed}/${total}`;
-    barFill.style.width = total ? `${(completed / total) * 100}%` : "0%";
+//Saved tasks from localStorage
+let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+//Save tasks to localStorage
+function saveToLocalStorage(tasks) {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-//Function to display todos on UI
+//Render tasks to the page/UI
 function renderTasks() {
-    const listItems = document.getElementById("list-items");
-    listItems.innerHTML = "";//clear old content
+    listItems.innerHTML = "";
 
     tasks.forEach(task => {
         const li = document.createElement("li");
+        li.classList.toggle("completed", task.completed);
+
         li.innerHTML = `
          <label><input type="checkbox" ${task.completed ? "checked" : ""}>
          <span>${task.input}</span></label>
          <div class="btn-grp">
-         <button class="edit-btn">✏️</button>
-         <button class="delete-btn">🗑️</button>
+           <button class="edit-btn">✏️</button>
+           <button class="delete-btn">🗑️</button>
          </div>
-       
         `;
 
         const checkbox = li.querySelector("input");
@@ -42,81 +56,73 @@ function renderTasks() {
         const deleteBtn = li.querySelector(".delete-btn");
         const taskSpan = li.querySelector("label span");
 
-        taskSpan.textContent = task.input;
+        checkbox.onchange = () => {
+            task.completed = checkbox.checked;
+            saveToLocalStorage(tasks);
+            updateProgress();
+            renderTasks();
+        };
+
+        taskSpan.textContent = task.title;
         if (task.completed) {
             taskSpan.classList.add("completed");
         }
-
-
-        checkbox.onchange = () => {
-            task.completed = checkbox.checked;
-            localStorage.setItem("tasks", JSON.stringify(tasks));
-            renderTasks();
-        };
 
         deleteBtn.onclick = () => {
             /*const index = tasks.findIndex(t => t.id === task.id);
             tasks.splice(index, 1);*/
             tasks = tasks.filter(t => t.id !== task.id);
-            localStorage.setItem("tasks", JSON.stringify(tasks));
+            saveToLocalStorage(tasks);
             renderTasks();
         };
 
         editBtn.onclick = () => {
-            const editInput = prompt("Edit task:", task.input);
+            const editInput = prompt("Edit task:", task.title);
             if (editInput !== null) {
-                task.input = editInput.trim();
+                task.title = editInput.trim();
                 task.completed = false;
-                localStorage.setItem("tasks", JSON.stringify(tasks));
+                saveToLocalStorage(tasks);
                 renderTasks();
             }
         };
-
         listItems.appendChild(li);
     });
     updateProgress();
 }
 
-
-//function to fetch todos from API and save to localStorage
-
-async function fetchAndStoreTodos() {
-    try {
-        //make GET response with Axios
-        await axios.get("https://jsonplaceholder.typicode.com/todos");
-        //Store only 5 todos and map to needed fields.
-        const cleanedTodos = response.data.slice(0, 5).map(todo => ({
-            id: todo.id,
-            input: todo.title,
-            completed: todo.completed
-        }));
-        //Save to localStorage as a string
-        localStorage.setItem("tasks", JSON.stringify(cleanedTodos));
-        //update our in-memory array
-        tasks = cleanedTodos;
-        //Display on the ui page
-        renderTasks();
-    } catch (error) {
-        alert("Error fetching todos:", error);
-        return [];
-    }
-}
-
-
-//Function to load todos from localStorage if they exist
-function loadTodosFromStorage() {
-    const stored = JSON.parse(localStorage.getItem("tasks"));
-    if (stored && Array.isArray(stored) && stored.length > 0) {
-        tasks = stored;
-        renderTasks();
+//Fetch 5 tasks from API using Axios
+async function fetchInitialTasks() {
+    if (tasks.length === 0) {
+        console.log("localStorage empty- fetching initial tasks...");
+        try {
+            const response = await axios.get("https://jsonplaceholder.typicode.com/todos");
+            const firstFive = response.data.slice(0, 5).map(todo => ({
+                id: todo.id,
+                title: todo.title,
+                completed: todo.completed
+            }));
+            tasks = firstFive;
+            saveToLocalStorage(tasks)
+           
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
     } else {
-        //If nothing in storage, fetch from API
-        fetchAndStoreTodos();
+        tasks = JSON.parse(localStorage.getItem("tasks")) || [];
     }
+    renderTasks();
+}
+
+//function for progress bar
+function updateProgress() {
+    const total = tasks.length;
+    const completed = tasks.filter(task => task.completed).length;
+    progressText.textContent = `${completed}/${total}`;
+    barFill.style.width = total ? `${(completed / total) * 100}%` : "0%";
 }
 
 
-//Function for adding tasks to array through user inputs.
+//Function for adding new tasks through user inputs.
 function addTask() {
     const inputBox = document.getElementById("input-box");
     if (!inputBox.value) {
@@ -124,16 +130,14 @@ function addTask() {
         return;
     }
 
-    tasks = loadTodosFromStorage();
-
     const newTask = {
         id: Math.floor(Math.random() * 10000),
-        input: inputBox.value.trim(),
+        title: inputBox.value.trim(),
         completed: false
     };
 
     tasks.push(newTask);
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    saveToLocalStorage(tasks)
     renderTasks();
     inputBox.value = "";
 }
@@ -146,5 +150,5 @@ inputBox.addEventListener("keydown", (e) => {
     }
 });
 
-//Run when the page load
-window.addEventListener("DOMContentLoaded", loadTodosFromStorage);
+//Event Listeners
+window.addEventListener("DOMContentLoaded", fetchInitialTasks);
